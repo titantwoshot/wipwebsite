@@ -1,12 +1,16 @@
-var http = require('http');
-var dt = require('./myfirstmodule');
-var url = require('url');
+const express = require('express');
+const app = express();
+const port = 8080;
+const CoinRouter = require('./routes/CoinRouter');
 
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/html'});
-  res.write("Date and time currently: " + dt.myDateTime());
-  res.write("<br>" + req.url + "<br>");
-  var q = url.parse(req.url, true).query;
-  var txt = q.year + " " + q.month;
-  res.end(txt);
-}).listen(8080);
+app.listen(port, function(req, res) {
+  console.log('Your server is running at localhost' + ':' + port);
+});
+
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.use('/coins', CoinRouter);
